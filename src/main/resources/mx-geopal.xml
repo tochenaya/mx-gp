@@ -1,0 +1,145 @@
+<configurations>
+    <!--Устанавливает тайм аут до сброса соединения, в секундах, лучше оставить по умолчанию-->
+    <httpTimeout>30</httpTimeout>
+    <geopalBaseUrl>https://app.geopalsolutions.com/</geopalBaseUrl>
+    <storageTableName>mxgeopalJob</storageTableName>
+    <!-- Насйтройки для базы даннаых-->
+    <database>
+        <!-- datasource установленный в wildfly-->
+        <dataSource>java:jboss/datasources/integration-datasource</dataSource>
+    </database>
+    <accounts>
+        <account>
+            <geopal>
+                <jobTemplateId>13820</jobTemplateId>
+                <userId>16774</userId>
+                <apiKey>BEOTvH1HMtKbI9Rtvqhx</apiKey>
+                <timeZone>Europe/London</timeZone>
+            </geopal>
+            <maxoptra>
+                <host>http://localhost</host>
+                <accountId>geopaldemo2</accountId>
+                <user>api</user>
+                <password>mam</password>
+                <aoc>Emulator</aoc>
+                <!--Нужно проставить формат даты в зависимости от локали аккаута макосптры -->
+                <dateTimePattern>dd/MM/yyyy HH:mm</dateTimePattern>
+            </maxoptra>
+            <!-- Если true то потдерживается кэйс создания заказв в Геопале через Максоптру -->
+            <!-- Если false то потдерживается кэйс создания заказв в Максоптре через геопал-->
+            <canCreateJobInGeopal>true</canCreateJobInGeopal>
+            <jobFields>
+                <jobField>
+                    <mxFieldName>Job_types</mxFieldName>
+                    <gpFieldId>43776</gpFieldId>
+                </jobField>
+                <jobField>
+                    <mxFieldName>Skills</mxFieldName>
+                    <gpFieldId>43777</gpFieldId>
+                </jobField>
+                <jobField>
+                    <mxFieldName>includeList</mxFieldName>
+                    <gpFieldId>44848</gpFieldId>
+                </jobField>
+            </jobFields>
+            <statuses>
+                <status>
+                    <statusGp>Accepted</statusGp>
+                    <mxStatuses>
+                        <statusMx>Committed</statusMx>
+                        <statusMx>Pickup_on_move</statusMx>
+                    </mxStatuses>
+                </status>
+                <status>
+                    <statusGp>InProgress</statusGp>
+                    <mxStatuses>
+                        <statusMx>Committed</statusMx>
+                        <statusMx>Pickup_on_move</statusMx>
+                        <statusMx>Pickup_arrived</statusMx>
+                        <statusMx>Pickup_started</statusMx>
+                    </mxStatuses>
+                </status>
+                <status>
+                    <statusGp>Completed</statusGp>
+                    <mxStatuses>
+                        <statusMx>Committed</statusMx>
+                        <statusMx>Pickup_on_move</statusMx>
+                        <statusMx>Pickup_arrived</statusMx>
+                        <statusMx>Pickup_started</statusMx>
+                        <statusMx>Closed</statusMx>
+                    </mxStatuses>
+                </status>
+                <status>
+                    <statusGp>Incomplete</statusGp>
+                    <mxStatuses>
+                        <statusMx>Committed</statusMx>
+                        <statusMx>Pickup_on_move</statusMx>
+                        <statusMx>Pickup_arrived</statusMx>
+                        <statusMx>Pickup_started</statusMx>
+                        <statusMx>Failed</statusMx>
+                    </mxStatuses>
+                </status>
+                <status>
+                    <statusGp>Rejected</statusGp>
+                    <mxStatuses>
+                        <statusMx>Committed</statusMx>
+                        <statusMx>Pickup_on_move</statusMx>
+                        <statusMx>Pickup_arrived</statusMx>
+                        <statusMx>Pickup_started</statusMx>
+                        <statusMx>Failed</statusMx>
+                    </mxStatuses>
+                </status>
+            </statuses>
+
+            <email>
+                <!--Адрес почтового сервера-->
+                <host>smtp.office365.com</host>
+                <!--Порт-->
+                <port>587</port>
+                <!--Логин пользователя в почте-->
+                <login>mx-noreply@magenta-technology.com</login>
+                <!--Пароль пользователя в почте-->
+                <password>Woja2132</password>
+                <!--Адрес от которого будут отправляться письма-->
+                <fromAddress>mx-noreply@magenta-technology.com</fromAddress>
+                <!--Имя от кого будут отправляться письма-->
+                <!--Если параметр не заполнен в качестве имени отправителя будет использован адрес отправителя (fromAddress)-->
+                <fromName>Maxoptra-Noreply</fromName>
+                <!--Тип шифрования почты, возможные значения: SSL_TLS, Start_TLS, NONE(Не использовать шифрование). По умолчанию Start_TLS (Используется в Exchange)-->
+                <encrypting>Start_TLS</encrypting>
+                <!-- Данный набор будет отсылатся в случаем ошибока -->
+                <whenError>
+                    <!--Кому будет отослано письмо, можно отправлять нескольким адресатам, перечисление через запятую (,)-->
+                    <to>m.tochenaya@gmail.com,mariya.tochenaya@magenta-technology.com</to>
+                    <!--Заголовок письма-->
+                    <subject>An error occurred during the integration process</subject>
+                    <!--Заглавное сообщение внутри письма-->
+                    <!-- Для переноса строк использовать комбинацию &#13;&#10; -->
+                    <bodyTitle>Hi,&#13;&#10;Please find details below:</bodyTitle>
+                </whenError>
+
+            </email>
+
+            <!--Настройки таймеров-->
+            <timer>
+                <!--Для таймеров, можно задавать следующие виды времени: second, minute, hour, month, year.-->
+                <!--Значение по умолчанию каждые 5 минут-->
+                <toGeopalTimerElement>
+                    <minute>*/5</minute>
+                </toGeopalTimerElement>
+            </timer>
+
+            <archive>
+                <!--Если задано значение паттерна тогда будут создаватся папки соответствующие ему, в случае если паттерн не установлен все файлы будут хранится в одной папке-->
+                <archivePattern>yyyy/MM/dd</archivePattern>
+                <importFolder>/opt/integration/geopal/import</importFolder>
+                <exportFolder>/opt/integration/geopal/export</exportFolder>
+                <!-- сюда складываются цикл запросов во время которого произошла ошибка, тоесть не завершенные-->
+                <exportErrorFolder>/opt/integration/geopal/error</exportErrorFolder>
+            </archive>
+            <!--При старте приложение запрашивает у геопал работы за указанное количество дней(Если ноль то не будет запрашивать) -->
+            <amount_days>1</amount_days>
+
+        </account>
+    </accounts>
+</configurations>
