@@ -10,7 +10,7 @@ import java.sql.Connection;
 
 @RequestScoped
 public class WrapperConnection {
-    static final Logger log = LoggerFactory.getLogger(WrapperConnection.class);
+    private static final Logger log = LoggerFactory.getLogger(WrapperConnection.class);
 
     @Inject
     Connection connection = null;

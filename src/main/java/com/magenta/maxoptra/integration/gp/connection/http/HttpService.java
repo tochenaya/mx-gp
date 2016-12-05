@@ -107,7 +107,7 @@ public class HttpService {
         }
 
         String result = EntityUtils.toString(response.getEntity());
-        archiveMessageComponent.add(archiveUrl.toString(), result);
+        archiveMessageComponent.add(archiveUrl.toString() + "\n" + result);
         return result;
     }
 
@@ -121,7 +121,7 @@ public class HttpService {
         UriBuilder uriBuilder = UriBuilder.fromUri(BASE_URL + url);//URI.create(url);
         for (Map.Entry<String, String> param : params.entrySet()) {
             list.add(new BasicNameValuePair(param.getKey(), param.getValue()));
-            archiveUrl.append(" " + param.getKey() + "=" + param.getValue());
+            archiveUrl.append(" ").append(param.getKey()).append("=").append(param.getValue());
         }
 
         HttpPost httpPost = new HttpPost(uriBuilder.build());
@@ -141,7 +141,7 @@ public class HttpService {
         }
 
         String result = EntityUtils.toString(response.getEntity());
-        archiveMessageComponent.add(archiveUrl.toString(), result);
+        archiveMessageComponent.add(archiveUrl.toString() + "\n" + result);
         return result;
 
     }
@@ -149,8 +149,7 @@ public class HttpService {
     private HttpClient createHttpClient() throws FileNotFoundException, JAXBException {
         int timeout = configurationUtils.getConfigurations().httpTimeout;
         RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(timeout * 1000).build();
-        HttpClient hc = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-        return hc;
+        return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     }
 
     private Map<String, String> getHeaders(String method, String uri, GeoPalConf geoPalConf) {
@@ -172,7 +171,7 @@ public class HttpService {
         return Base64.encodeBase64String(test.getBytes());
     }
 
-    public String getHMAC256(String pwd, String inputdata) {
+    private String getHMAC256(String pwd, String inputdata) {
         String temp = null;
         SecretKeySpec keySpec = new SecretKeySpec(pwd.getBytes(), "HmacSHA256");
         try {

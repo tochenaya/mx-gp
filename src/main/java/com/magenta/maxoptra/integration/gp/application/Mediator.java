@@ -84,7 +84,7 @@ public class Mediator {
                 log.warn("Account not found in configuration by template Id = " + jobData.getTemplate_id());
                 return;
             }
-            archiveMessageComponent.add("Send by Iot Project from GeoPal", new ObjectMapper().writeValueAsString(jobData));
+            archiveMessageComponent.add("Send by Iot Project from GeoPal" + "\n" + new ObjectMapper().writeValueAsString(jobData));
             boolean ok = false;
 
             if (jobData.getJob_status_id() == GeopalStatuses.UNASSIGNED.ordinal()) {
@@ -104,15 +104,15 @@ public class Mediator {
             }
 
         } catch (Exception e) {
-            if(e instanceof GPErrorException){
+            if (e instanceof GPErrorException) {
                 log.warn("Error during send to Maxoptra. ", e);
             } else {
                 log.error("Error during send to Maxoptra. ", e);
             }
-            ArchiveService.archiveErrorMessage(account.archiveConf, archiveMessageComponent.getMessage(), e);
-
             if (account != null) {
-                sendResults(account, "An error occurred while sending job " + reference + " to Maxoptra. " + e.getMessage() != null ? e.getMessage() : e.toString());
+                ArchiveService.archiveErrorMessage(account.archiveConf, archiveMessageComponent.getMessage(), e);
+                String message = e.getMessage() != null ? e.getMessage() : e.toString();
+                sendResults(account, "An error occurred while sending job " + reference + " to Maxoptra. " + message);
             }
         }
     }
@@ -123,7 +123,7 @@ public class Mediator {
         try {
             try {
 
-                archiveMessageComponent.add("Webhook from Maxoptra", XMLService.marshal(changeOrderStatusRecord));
+                archiveMessageComponent.add("Webhook from Maxoptra" + "\n" + XMLService.marshal(changeOrderStatusRecord));
 
                 log.info("changeOrderStatusRecord: " + changeOrderStatusRecord);
                 if (!isAssign(changeOrderStatusRecord) && !isUnAssign(changeOrderStatusRecord)) {
@@ -153,15 +153,15 @@ public class Mediator {
                         "it will be sent again. " + e.getMessage());
             }
         } catch (Exception e) {
-            if(e instanceof GPErrorException){
+            if (e instanceof GPErrorException) {
                 log.warn("Error during send to Geopal", e);
             } else {
                 log.error("Error during send to Geopal", e);
             }
-
-            ArchiveService.archiveErrorMessage(account.archiveConf, archiveMessageComponent.getMessage(), e);
             if (account != null) {
-                sendResults(account, "An error occurred while sending job " + changeOrderStatusRecord.reference + " to GeoPal. " + e.getMessage() != null ? e.getMessage() : e.toString());
+                ArchiveService.archiveErrorMessage(account.archiveConf, archiveMessageComponent.getMessage(), e);
+                String message = e.getMessage() != null ? e.getMessage() : e.toString();
+                sendResults(account, "An error occurred while sending job " + changeOrderStatusRecord.reference + " to GeoPal. " + message);
             }
         }
     }
@@ -181,17 +181,16 @@ public class Mediator {
     }
 
     private boolean isAssign(ChangeOrderStatusRecord changeOrderStatusRecord) {
-        return changeOrderStatusRecord.newStatus.equalsIgnoreCase("DETAILS_SENT");
+        return changeOrderStatusRecord.newStatus.equalsIgnoreCase("DETAILS_SENDING");
     }
 
     private boolean isUnAssign(ChangeOrderStatusRecord changeOrderStatusRecord) {
         return (changeOrderStatusRecord.newStatus.equalsIgnoreCase("NEW") &&
                 !changeOrderStatusRecord.oldStatus.equalsIgnoreCase("ALLOCATED") &&
-                !changeOrderStatusRecord.oldStatus.equalsIgnoreCase("COMMITTING") &&
-                !changeOrderStatusRecord.oldStatus.equalsIgnoreCase("DETAILS_SENDING"))
+                !changeOrderStatusRecord.oldStatus.equalsIgnoreCase("COMMITTING"))
                 //Нажатие на Unlock schedule
                 || (changeOrderStatusRecord.newStatus.equalsIgnoreCase("ALLOCATED") &&
-                changeOrderStatusRecord.oldStatus.equalsIgnoreCase("DETAILS_SENT"));
+                changeOrderStatusRecord.oldStatus.equalsIgnoreCase("DETAILS_SENDING"));
     }
 
     private boolean assignInGeopal(Account account, ChangeOrderStatusRecord changeOrderStatusRecord) throws Exception {
@@ -281,17 +280,17 @@ public class Mediator {
             StringBuilder stringBuilderError = new StringBuilder();
 
             if (response.getError() != null) {
-                stringBuilderError.append("Job " + reference + " status in Maxoptra could not be updated to " + mxStatuses + " due to error ");
-                stringBuilderError.append(response.getError().getErrorCode() + ": " + response.getError().getErrorMessage() + "\n");
+                stringBuilderError.append("Job ").append(reference).append(" status in Maxoptra could not be updated to ").append(mxStatuses).append(" due to error ");
+                stringBuilderError.append(response.getError().getErrorCode()).append(": ").append(response.getError().getErrorMessage()).append("\n");
             }
 
             if (response.getOrders() != null) {
                 for (OrderStatusUpdate order : response.getOrders().getOrder()) {
                     if (order.getErrors() != null) {
-                        stringBuilderError.append("Job " + order.getOrderReference() + " status in Maxoptra could not be updated to " +
-                                order.getStatus() + " due to error ");
+                        stringBuilderError.append("Job ").append(order.getOrderReference()).append(" status in Maxoptra could not be updated to ").
+                                append(order.getStatus()).append(" due to error ");
                         for (ResponseError error : order.getErrors().getError()) {
-                            stringBuilderError.append(error.getErrorCode() + ": " + error.getErrorMessage() + "\n");
+                            stringBuilderError.append(error.getErrorCode()).append(": ").append(error.getErrorMessage()).append("\n");
                         }
                     }
                 }
@@ -358,7 +357,7 @@ public class Mediator {
             }
             ArchiveService.archiveImportMessage(account.archiveConf, archiveMessageComponent.getMessage());
         } catch (Exception e) {
-            if(e instanceof GPErrorException){
+            if (e instanceof GPErrorException) {
                 log.warn("Error! ", e);
             } else {
                 log.error("Error! ", e);
@@ -394,14 +393,13 @@ public class Mediator {
                 return;
             }
 
-            if (mxJobDetails != null && !mxJobDetails.status.equalsIgnoreCase("NEW") &&
+            if (!mxJobDetails.status.equalsIgnoreCase("NEW") &&
                     !mxJobDetails.status.equalsIgnoreCase("ALLOCATED") &&
-                    !mxJobDetails.status.equalsIgnoreCase("COMMITTING") &&
-                    !mxJobDetails.status.equalsIgnoreCase("DETAILS_SENDING")) {
+                    !mxJobDetails.status.equalsIgnoreCase("COMMITTING")) {
                 changeMxJobStatus(account, gpJobData, mxJobDetails.status);
             }
         } catch (Exception e) {
-            if(e instanceof GPErrorException){
+            if (e instanceof GPErrorException) {
                 log.warn("Error! ", e);
             } else {
                 log.error("Error! ", e);

@@ -167,7 +167,7 @@ public class Storage {
                     hl.put(record.account, l);
                 }
                 for (Map.Entry<String, List<String>> entry : hl.entrySet()) {
-                    sb.append("<h4 style='margin-bottom: 10px;'>Account : " + entry.getKey() + "</h4>");
+                    sb.append("<h4 style='margin-bottom: 10px;'>Account : ").append(entry.getKey()).append("</h4>");
                     for (String s : entry.getValue()) {
                         sb.append(s);
                     }

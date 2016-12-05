@@ -138,7 +138,7 @@
                 <exportErrorFolder>/opt/integration/geopal/error</exportErrorFolder>
             </archive>
             <!--При старте приложение запрашивает у геопал работы за указанное количество дней(Если ноль то не будет запрашивать) -->
-            <amount_days>1</amount_days>
+            <amountDays>1</amountDays>
 
         </account>
     </accounts>

@@ -17,11 +17,15 @@ public class MxHttpEventListener {
     ArchiveMessageComponent archiveMessageComponent;
 
     public void runRequestEvent(@Observes RequestEvent runRequestEvent) {
-        archiveMessageComponent.add("Request", runRequestEvent.getToUrl(), runRequestEvent.getRequest());
+        archiveMessageComponent.add("Request" + "\n" +
+                runRequestEvent.getToUrl() + "\n" +
+                runRequestEvent.getRequest());
     }
 
     public void runResponseEvent(@Observes ResponseEvent runResponseEvent) {
-        archiveMessageComponent.add("Response", runResponseEvent.getFromUrl(), runResponseEvent.getResponse());
+        archiveMessageComponent.add("Response"+ "\n" +
+                runResponseEvent.getFromUrl() + "\n" +
+                runResponseEvent.getResponse());
     }
 }
 

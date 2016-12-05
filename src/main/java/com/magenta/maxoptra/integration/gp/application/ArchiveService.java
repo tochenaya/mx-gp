@@ -58,7 +58,7 @@ public class ArchiveService {
         log.info("Start archive error message");
 
         message += "\n\n----Error message----\n\n";
-        message += ex.getMessage() != null ? ex.getMessage() + "/n" : "" + ex.toString();
+        message += ex.getMessage() != null ? ex.getMessage() + "/n" : ex.toString();
 
         if (archiveConf == null || StringUtils.isBlank(archiveConf.exportErrorFolder)) {
             log.info("Archive export folder not set");

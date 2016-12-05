@@ -23,5 +23,5 @@ public class Account {
     @XmlElement(name = "archive")
     public ArchiveConf archiveConf = new ArchiveConf();
 
-    public Long amount_days;
+    public Long amountDays;
 }

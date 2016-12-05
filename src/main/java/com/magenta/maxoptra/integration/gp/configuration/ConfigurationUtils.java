@@ -20,13 +20,13 @@ public class ConfigurationUtils {
 
     private final static Logger log = LoggerFactory.getLogger(ConfigurationUtils.class);
 
-    protected static final String CONF_PROPERTY_NAME = "com.magenta.integration.geopal";
-    protected static final String CONF_FILE_NAME = "mx-geopal.xml";
+    private static final String CONF_PROPERTY_NAME = "com.magenta.integration.geopal";
+    private static final String CONF_FILE_NAME = "mx-geopal.xml";
     public static final String geopalDateTimePattern = "yyyy-MM-dd HH:mm:ss";
-    protected Configurations configurations;
+    private Configurations configurations;
 
-    protected static ConcurrentHashMap<String, Account> accountsByMxAccountName; // maxoptra account name -> account config
-    protected static ConcurrentHashMap<String, Account> accountsByGpTemplateId; // maxoptra account name -> account config
+    private static ConcurrentHashMap<String, Account> accountsByMxAccountName; // maxoptra account name -> account config
+    private static ConcurrentHashMap<String, Account> accountsByGpTemplateId; // maxoptra account name -> account config
 
     @PostConstruct
     private void initConfiguration() throws Exception{
@@ -52,17 +52,17 @@ public class ConfigurationUtils {
 
         JAXBContext jaxbContext = JAXBContext.newInstance(Configurations.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        this.configurations = (Configurations) jaxbUnmarshaller.unmarshal(inputStream);
+        configurations = (Configurations) jaxbUnmarshaller.unmarshal(inputStream);
         fillAccountsMap();
     }
 
-    protected void copyConfigurationFileFromResources(String confFilePath) throws IOException {
+    private void copyConfigurationFileFromResources(String confFilePath) throws IOException {
         URL inputUrl = getClass().getResource("/" + CONF_FILE_NAME);
         File dest = new File(confFilePath);
         FileUtils.copyURLToFile(inputUrl, dest);
     }
 
-    protected String getConfFilePath() {
+    private String getConfFilePath() {
         String confPath = System.getProperty(CONF_PROPERTY_NAME);
         if (StringUtils.isNotBlank(confPath)) return confPath;
 
@@ -90,7 +90,7 @@ public class ConfigurationUtils {
         return getConfigurations().accounts.account;
     }
 
-    protected void fillAccountsMap() throws FileNotFoundException, JAXBException {
+    private void fillAccountsMap() throws FileNotFoundException, JAXBException {
         if (accountsByMxAccountName == null) accountsByMxAccountName = new ConcurrentHashMap<>();
         if (accountsByGpTemplateId == null) accountsByGpTemplateId = new ConcurrentHashMap<>();
 

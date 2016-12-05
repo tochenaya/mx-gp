@@ -101,19 +101,21 @@ public class MaxoptraApiService {
 
         if (response.getError() != null) {
             stringBuilderError.append("Job ").append(reference).append(" was not deleted from Maxoptra due to error ");
-            stringBuilderError.append(response.getError().getErrorCode() + ": " + response.getError().getErrorMessage() + "\n");
+            stringBuilderError.append(response.getError().getErrorCode()).
+                    append(": ").append(response.getError().getErrorMessage()).append("\n");
         }
 
         if (response.getOrders() != null) {
             for (Order orderResponse : response.getOrders().getOrder()) {
                 if (orderResponse.getErrors() != null) {
-                    stringBuilderError.append("Job " + orderResponse.getOrderReference() + " was not deleted from Maxoptra due to error ");
+                    stringBuilderError.append("Job ").append(orderResponse.getOrderReference()).append(" was not deleted from Maxoptra due to error ");
 
                     for (ResponseError error : orderResponse.getErrors().getError()) {
-                        stringBuilderError.append(error.getErrorCode() + ": " + error.getErrorMessage() + "\n");
+                        stringBuilderError.append(error.getErrorCode()).append(": ").append(error.getErrorMessage()).append("\n");
                     }
                 } else {
-                    stringBuilderSuccess.append("Job " + orderResponse.getOrderReference() + " was " + orderResponse.getStatus() + "\n");
+                    stringBuilderSuccess.append("Job ").append(orderResponse.getOrderReference()).append(" was ").
+                            append(orderResponse.getStatus()).append("\n");
                 }
 
             }
@@ -155,20 +157,20 @@ public class MaxoptraApiService {
         StringBuilder stringBuilderSuccess = new StringBuilder();
 
         if (response.getError() != null) {
-            stringBuilderError.append("Job " + reference + " was not update in Maxoptra due to error ");
-            stringBuilderError.append(response.getError().getErrorCode() + ": " + response.getError().getErrorMessage() + "\n");
+            stringBuilderError.append("Job ").append(reference).append(" was not update in Maxoptra due to error ");
+            stringBuilderError.append(response.getError().getErrorCode()).append(": ").append(response.getError().getErrorMessage()).append("\n");
         }
 
         if (response.getOrders() != null) {
             for (Order order : response.getOrders().getOrder()) {
                 if (order.getErrors() != null) {
-                    stringBuilderError.append("Job " + order.getOrderReference() + " was not update in Maxoptra due to error ");
+                    stringBuilderError.append("Job ").append(order.getOrderReference()).append(" was not update in Maxoptra due to error ");
 
                     for (ResponseError error : order.getErrors().getError()) {
-                        stringBuilderError.append(error.getErrorCode() + ": " + error.getErrorMessage() + "\n");
+                        stringBuilderError.append(error.getErrorCode()).append(": ").append(error.getErrorMessage()).append("\n");
                     }
                 } else {
-                    stringBuilderSuccess.append("Job " + order.getOrderReference() + " was " + order.getStatus() + "\n");
+                    stringBuilderSuccess.append("Job ").append(order.getOrderReference()).append(" was ").append(order.getStatus()).append("\n");
                 }
 
             }

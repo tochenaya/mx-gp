@@ -94,7 +94,7 @@ public class GeopalApiService {
             throw new GPErrorException("Zone " + account.geopal.timeZone + " in configuration file doesn't exist.");
         }
         LocalDateTime now = LocalDateTime.now(ZoneId.of(account.geopal.timeZone));
-        String dateTimeFrom = now.minusDays(account.amount_days)
+        String dateTimeFrom = now.minusDays(account.amountDays)
                 .format(DateTimeFormatter.ofPattern(ConfigurationUtils.geopalDateTimePattern));
         String dateTimeTo = now.format(DateTimeFormatter.ofPattern(ConfigurationUtils.geopalDateTimePattern));
 
